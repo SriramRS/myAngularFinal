@@ -1,0 +1,87 @@
+<html>
+<head>
+  <title></title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+
+</head>
+<body>
+  <div class="top">
+    <select value="year" ng-model="$scope.type" ng-init="$scope.type='year'">
+      <option value="year" selected>Year</option>
+      <option value="above_500">Above500</option>
+      <option value="under_500">Below500</option>
+    </select>
+    <input type="text"  ng-model="$scope.val"/>
+    <button ng-click="val=$scope.val;type=$scope.type;" ng-init="val=0;type='year'";>Filter</button>
+  </div>
+  <div>
+  <table>
+    <caption>Crime Data</caption>
+    <tr>
+      <th><a href="#" ng-click="sortType = 'year'; sortOrder = !sortOrder">
+            Year
+            <span ng-show="sortType == 'year' && sortOrder" class="fa fa-caret-up"></span>
+            <span ng-show="sortType == 'year' && !sortOrder" class="fa fa-caret-down"></span>
+          </a></th>
+      <th><a href="#" ng-click="sortType = 'above_500'; sortOrder = !sortOrder">
+            Above 500
+            <span ng-show="sortType == 'above_500' && !sortOrder" class="fa fa-caret-down"></span>
+            <span ng-show="sortType == 'above_500' && sortOrder" class="fa fa-caret-up"></span>
+          </a></th>
+      <th><a href="#" ng-click="sortType = 'under_500'; sortOrder = !sortOrder">
+            Below_500
+            <span ng-show="sortType == 'under_500' && !sortOrder" class="fa fa-caret-down"></span>
+            <span ng-show="sortType == 'under_500' && sortOrder" class="fa fa-caret-up"></span>
+          </a></th>
+    </tr>
+    <tr ng-repeat="c in crime   | datafilter:type:val:this | startfrom:((currentPage)*(pageSize))| limitTo:pageSize | orderBy:sortType:sortOrder">
+      <td>{{c.year}}</td>
+      <td>{{c.above_500}}</td>
+      <td>{{c.under_500}}</td>
+      <td><button ng-click="delete(c);reset();">delete</button></td>
+    </tr>
+  </table>
+  <div style="margin-left:auto;margin-right:auto;width:500px;padding-top:30px;float:right;">
+    <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+           <<
+     </button>
+    <button ng-repeat="i in [1,2,3,4,5,6,7,8]  | limitTo:pageCount" ng-click="currentPage=i-1;curPage(i)">{{i}}</button>
+    <button ng-disabled="currentPage>=len/pageSize-1" ng-click="currentPage=currentPage+1">
+           >>
+    </button>
+  </div>
+  <div class="formm" style="margin-left:auto;margin-right:auto;margin-top:100px;width:500px;padding-top:30px;float:right;">
+     <form name="myform" method="post">
+       <table class="table">
+       <tr>
+           <td>Year:</td>
+           <td><input name="year" type="text" ng-model="year" ng-required="true" ng-pattern="/^1[9]4[7-9]$|1[9][5-9][0-9]$|2[0]0[0-9]$|2[0]1[0-6]$/"/></td>
+           <td style="width:200px;text-align:left;">
+            <!--    <p ng-show="myform.year.$error.required">*</p> -->
+                <p ng-show="myform.year.$invalid">Enter valid number only</p>
+           </td>
+       </tr>
+       <tr>
+           <td>Below_500:</td>
+           <td><input name="year_one" type="text" ng-required="true" ng-model="above_500" ng-pattern="/^([0-9][0-9]{0,4}|100000)$/"/></td>
+           <td style="width:200px;text-align:left;">
+                <!--  <p ng-show="myform.year_one.$error.required">*</p> -->
+                <p ng-show="myform.year_one.$invalid">Above_500:incorrect entry</p>
+           </td>
+       </tr>
+       <tr>
+           <td>Above_500:</td>
+           <td><input name="year_two" type="text" ng-required="true" ng-model="under_500" ng-pattern="/^([0-9][0-9]{0,4}|100000)$/"/></td>
+           <td style="width:200px;text-align:left;">
+              <!--    <p ng-show="myform.year_two.$error.required">*</p>-->
+                <p ng-show="myform.year_two.$invalid">Below_500:incorrect entry</p>
+           </td>
+       </tr>
+       <tr><td></td><td><input type="submit" class="but" ng-disabled="myform.$invalid" ng-click="add(year,above_500,under_500);resett();"></input></td></tr>
+
+     </form>
+  </div>
+
+
+</body>
+</html>
